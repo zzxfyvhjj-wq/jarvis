@@ -25,22 +25,18 @@ System({
     
     let filterType = match ? match.trim().toUpperCase() : null;
 
-    
-    
-    let menu = `╭━━━〔 ${config.BOT_INFO.split(';')[0]} ⁩〕━━━┈⊷
-┃⛯╭──────────────
-┃⛯│ *owner* :  ${config.BOT_INFO.split(';')[0]}
-┃⛯│ *user* : ${message.pushName.replace(/[\r\n]+/gm, "")}
-┃⛯│ *plugins* : ${plugins.commands.length}
-┃⛯│ *prefix* : ${message.prefix}
-┃⛯│ *date* : ${date}
-┃⛯│ *time* : ${time}
-┃⛯│ *uptime* : ${clockString(uptime())} 
-┃⛯│ *version* : ᴠ${version}
-┃⛯╰──────────────
-╰━━━━━━━━━━━━━━━┈⊷
-${await readMore()}
-╭━━━━━━━━━━━━━━━┈⊷\n╽`;
+    let menu = `┏━━━ ✦ *${config.BOT_INFO.split(';')[0]}* ✦ ━━━┓
+┃ ❖ *𝐎𝐰𝐧𝐞𝐫*   : ${config.BOT_INFO.split(';')[0]}
+┃ ❖ *𝐔𝐬𝐞𝐫*    : ${message.pushName.replace(/[\r\n]+/gm, "")}
+┃ ❖ *𝐏𝐥𝐮𝐠𝐢𝐧𝐬* : ${plugins.commands.length}
+┃ ❖ *𝐏𝐫𝐞𝐟𝐢𝐱*  : ${message.prefix}
+┃ ❖ *𝐃𝐚𝐭𝐞*    : ${date}
+┃ ❖ *𝐓𝐢𝐦𝐞*    : ${time}
+┃ ❖ *𝐔𝐩𝐭𝐢𝐦𝐞*  : ${clockString(uptime())} 
+┃ ❖ *𝐕𝐞𝐫𝐬𝐢𝐨𝐧* : ᴠ${version}
+┗━━━━━━━━━━━━━━━━━━━━━┛
+${await readMore()}`;
+
     let cmnd = [];
     let cmd;
     let category = [];
@@ -69,29 +65,22 @@ ${await readMore()}
     });
     cmnd.sort();
     category.sort().forEach((cmmd) => {
-        menu += `
-┃  ╭─────────────┈⊷
-┃  │  *${cmmd} ⏎*
-┃  ╰┬────────────┈⊷
-┃  ┌┤`;
+        menu += `\n\n▛▀▀▀▀▜ *${cmmd.toUpperCase()}* ▛▀▀▀▀▜`;
         let comad = cmnd.filter(({ type }) => type == cmmd);
         comad.forEach(({ cmd }, num) => {
-            menu += `\n┃  │ ☍  *${cmd.trim()}*`;
+            menu += `\n ◈ *${cmd.trim()}*`;
         });
-        menu += `\n┃  ╰─────────────┈⊷`;
+        menu += `\n▙▄▄▄▄▟`;
     });
 
-    menu += ` ╰━━━━━━━━━━━┈⊷\n`;
-    menu += `\nMade with 🤍`;
+    menu += `\n\n*✦ 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐛𝐲 ${config.BOT_INFO.split(';')[0]} ✦*`;
 
     let url = `${config.BOT_INFO.split(';')[2]}`;
-    
 
     if (isUrl(url)) {
-    let options = config.BOT_INFO.includes('&gif') ? { gifPlayback: true, caption: menu } : { caption: menu };  
-    url = url.replace(/&gif/g, '');
-        return await message.sendFromUrl(url,
-          options)
+        let options = config.BOT_INFO.includes('&gif') ? { gifPlayback: true, caption: menu } : { caption: menu };  
+        url = url.replace(/&gif/g, '');
+        return await message.sendFromUrl(url, options);
     } else {
         return await message.send(menu);
     }
@@ -115,7 +104,7 @@ System({
     });
     if (config.MEDIA_DATA) {
         const [title, body, thumbnail] = config.MEDIA_DATA.split(";");
-        await message.sendFromUrl(thumbnail, { caption: menu })
+        await message.sendFromUrl(thumbnail, { caption: menu });
     } else {
         await message.send(menu);
     }
