@@ -12,7 +12,7 @@ Jarvis - Loki-Xer
 const { System, isPrivate, bot } = require("../lib/");  
 
 System({
-    pattern: "ping",
+    pattern: "rfk",
     fromMe: isPrivate,
     type: "misc",
     desc: "To check ping",
