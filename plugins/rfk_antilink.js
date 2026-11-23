@@ -3,25 +3,27 @@ const { System, isPrivate } = require("../lib/");
 let antiLinkGroups = {};
 
 System({
-    pattern: "rfklink ?(.*)",
+    pattern: "rfklinkon",
     fromMe: isPrivate,
     type: "group",
-    desc: "Custom Anti-Link (Admins ignored)",
+    desc: "Enable Custom Anti-Link (Admins ignored)",
     adminAccess: true,
-}, async (message, match) => {
+}, async (message) => {
     if (!message.isGroup) return await message.reply("_This command is only for groups._");
-    
-    const action = match ? match.trim().toLowerCase() : "";
-    
-    if (action === "on") {
-        antiLinkGroups[message.chat] = true;
-        return await message.reply("*☇ʳᶠᵏᵐᵒᵈˢ-ᵇᵒᵗ-ᵐᵈ☁ :* *Anti-Link Activated!* ✅\n_(Group Admins will not be removed)_");
-    } else if (action === "off") {
-        delete antiLinkGroups[message.chat];
-        return await message.reply("*☇ʳᶠᵏᵐᵒᵈˢ-ᵇᵒᵗ-ᵐᵈ☁ :* *Anti-Link Deactivated!* ❌");
-    } else {
-        return await message.reply("*Usage:*\n• `.rfklink on` - Enable\n• `.rfklink off` - Disable");
-    }
+    antiLinkGroups[message.chat] = true;
+    return await message.reply("*☇ʳᶠᵏᵐᵒᵈˢ-ᵇᵒᵗ-ᵐᵈ☁ :* *Anti-Link Activated!* ✅\n_(Group Admins will not be removed)_");
+});
+
+System({
+    pattern: "rfklinkoff",
+    fromMe: isPrivate,
+    type: "group",
+    desc: "Disable Custom Anti-Link",
+    adminAccess: true,
+}, async (message) => {
+    if (!message.isGroup) return await message.reply("_This command is only for groups._");
+    delete antiLinkGroups[message.chat];
+    return await message.reply("*☇ʳᶠᵏᵐᵒᵈˢ-ᵇᵒᵗ-ᵐᵈ☁ :* *Anti-Link Deactivated!* ❌");
 });
 
 System({
