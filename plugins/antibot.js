@@ -1,5 +1,6 @@
 const { System } = require("../lib/");
 const { isAdmin, isBotAdmins } = require("./client/");
+const config = require("../config");
 
 let antibotGroups = {};
 
@@ -27,21 +28,33 @@ System({
     onlyGroup: true
 }, async (message) => {
     if (!antibotGroups[message.jid]) return;
-    if (message.key.fromMe) return; // സ്വന്തം ബോട്ടിന്റെ മെസ്സേജുകൾ ഒഴിവാക്കുന്നു
+    if (message.key.fromMe) return;
 
+    // 1. ബോട്ട് ഓണറുടെയും SUDO ലിസ്റ്റിലുള്ളവരുടെയും നമ്പറുകൾ ഒഴിവാക്കുന്നു
+    const senderNum = message.sender.split("@")[0].split(":")[0];
+    const sudoList = (config.SUDO || "").split(",");
+    if (sudoList.includes(senderNum) || message.isSudo) return;
+
+    // 2. ബോട്ട് അഡ്മിൻ ആണോ എന്ന് പരിശോധിക്കുന്നു
     const botAdmin = await isBotAdmins(message);
     if (!botAdmin) return;
 
-    const senderAdmin = await isAdmin(message, message.sender);
-    if (senderAdmin) return; // ഗ്രൂപ്പ് അഡ്മിൻമാരെ ഒഴിവാക്കുന്നു
+    // 3. ഗ്രൂപ്പ് അഡ്മിൻ ആണോ എന്ന് പരിശോധിക്കുന്നു (JID & LID സപ്പോർട്ടോടെ)
+    const groupMetadata = await message.client.groupMetadata(message.jid);
+    const participants = groupMetadata.participants || [];
+    const adminIds = participants
+        .filter(p => p.admin === "admin" || p.admin === "superadmin")
+        .map(p => p.id.split("@")[0].split(":")[0]);
 
-    // യഥാർത്ഥ ബോട്ടുകളുടെ (Baileys/WhatsApp Web) മെസ്സേജ് ഐഡികൾ മാത്രം തിരിച്ചറിയുന്നു
+    if (adminIds.includes(senderNum)) return;
+
+    // 4. ബോട്ടുകളുടെ മെസ്സേജ് ഐഡി തിരിച്ചറിയുന്നു
     const msgId = message.id || "";
     const isBotMsg = msgId.startsWith("BAE5") || msgId.startsWith("3EB0");
 
     if (isBotMsg) {
         await message.client.sendMessage(message.jid, { delete: message.key });
-        await message.send(`_@${message.sender.split("@")[0]} Bots are not allowed for members!_`, {
+        await message.send(`_@${senderNum} Bots are not allowed for members!_`, {
             mentions: [message.sender]
         });
     }
