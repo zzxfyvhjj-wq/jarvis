@@ -1,0 +1,46 @@
+const { System } = require("../lib/");
+const { isAdmin, isBotAdmins } = require("./client/");
+
+let antibotGroups = {};
+
+System({
+    pattern: "myantibot",
+    fromMe: true,
+    type: "group",
+    onlyGroup: true,
+    desc: "Antibot that ignores group admins"
+}, async (message, match) => {
+    if (!match) return await message.reply("*Usage:* `.myantibot on` or `.myantibot off`");
+    
+    if (match.toLowerCase() === "on") {
+        antibotGroups[message.jid] = true;
+        return await message.reply("_*Custom Antibot Activated! (Group Admins are ignored)*_");
+    } else if (match.toLowerCase() === "off") {
+        antibotGroups[message.jid] = false;
+        return await message.reply("_*Custom Antibot Deactivated!*_");
+    }
+});
+
+System({
+    on: "text",
+    fromMe: false,
+    onlyGroup: true
+}, async (message) => {
+    if (!antibotGroups[message.jid]) return;
+
+    const botAdmin = await isBotAdmins(message);
+    if (!botAdmin) return;
+
+    const senderAdmin = await isAdmin(message, message.sender);
+    if (senderAdmin) return;
+
+    const msgId = message.id || "";
+    const isBotMsg = msgId.startsWith("BAE5") || msgId.startsWith("3EB0") || msgId.length > 21;
+
+    if (isBotMsg) {
+        await message.client.sendMessage(message.jid, { delete: message.key });
+        await message.send(`_@${message.sender.split("@")[0]} Bots are not allowed for members!_`, {
+            mentions: [message.sender]
+        });
+    }
+});
