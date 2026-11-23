@@ -21,7 +21,17 @@ System({
     const start = new Date().getTime();
     const ping = await message.send("*𝆺𝅥 running 𝆺𝅥*");
     const end = new Date().getTime();
-    return await ping.edit("*☇ ꜱᴩᷨᴇͦᴇͭᴅ ☁ :* " + (end - start) + " *ᴍꜱ* ");
+    const speed = end - start;
+    
+    let response = `╭━━━〔 𓏵‧₊˚ ┊𝐋𝐌𝐌𝐎𝐃𝐙-𝐁𝐎𝐓-𝐗𝐃一緒 〕━━━╮
+┃
+┃ ❖ *𝐒𝐩𝐞𝐞𝐝*  : *${speed} ᴍꜱ*
+┃ ❖ *𝐒𝐭𝐚𝐭𝐮𝐬* : *Active*
+┃
+╰━━━━━━━━━━━━━━━━━━━━━━╯
+✦ *ᴩᴏᴡᴇʀᴇᴅ ʙʏ ₗₘₘₒDZ-Bₒₜ-ₓD* ✦`;
+
+    return await ping.edit(response);
 });
 
 System({
