@@ -21,7 +21,7 @@ System({
     const start = new Date().getTime();
     const ping = await message.send("*𝆺𝅥 running 𝆺𝅥*");
     const end = new Date().getTime();
-    return await ping.edit("*☇ˡᵐᵐᵒᵈᶻ-ᵇᵒᵗ-ᵐᵈ☁ :* " + (end - start) + " *ᴍꜱ*");
+    return await ping.edit("*☇ʳᶠᵏᵐᵒᵈˢ-ᵇᵒᵗ-ᵐᵈ☁ :* " + (end - start) + " *ᴍꜱ*");
 });
 
 System({
