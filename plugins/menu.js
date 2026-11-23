@@ -24,19 +24,21 @@ System({
     let [date, time] = new Date().toLocaleString("en-IN", { timeZone: config.TIMEZONE }).split(",");
     
     let filterType = match ? match.trim().toUpperCase() : null;
-    let botName = "ᴩᴏᴡᴇʀᴇᴅ ʙʏ ʟᴜɴᴀᴍᴀꜱꜱ";
-    const stars = ["🌟", "✨", "⭐"];
+    let botName = "𓏵‧₊˚ ┊𝐋𝐌𝐌𝐎𝐃𝐙-𝐁𝐎𝐓-𝐗𝐃一緒";
+    let footerText = "ₗₘₘₒDZ-Bₒₜ-ₓD";
 
-    let menu = `🌟✨⭐ *${botName}* ⭐✨🌟
-🌟 *𝐎𝐰𝐧𝐞𝐫*   : ${botName}
-✨ *𝐔𝐬𝐞𝐫*    : ${message.pushName.replace(/[\r\n]+/gm, "")}
-⭐ *𝐏𝐥𝐮𝐠𝐢𝐧𝐬* : ${plugins.commands.length}
-🌟 *𝐏𝐫𝐞𝐟𝐢𝐱*  : ${message.prefix}
-✨ *𝐃𝐚𝐭𝐞*    : ${date}
-⭐ *𝐓𝐢𝐦𝐞*    : ${time}
-🌟 *𝐔𝐩𝐭𝐢𝐦𝐞*  : ${clockString(uptime())} 
-✨ *𝐕𝐞𝐫𝐬𝐢𝐨𝐧* : ᴠ${version}
-🌟✨⭐━━━━━━━━━━━━━━━⭐✨🌟
+    let menu = `╭━━━〔 ${botName} 〕━━━╮
+┃
+┃ ❖ *𝐎𝐰𝐧𝐞𝐫*   : 𝐋𝐌𝐌𝐎𝐃𝐙-𝐁𝐎𝐓-𝐗𝐃
+┃ ❖ *𝐔𝐬𝐞𝐫*    : ${message.pushName.replace(/[\r\n]+/gm, "")}
+┃ ❖ *𝐏𝐥𝐮𝐠𝐢𝐧𝐬* : ${plugins.commands.length}
+┃ ❖ *𝐏𝐫𝐞𝐟𝐢𝐱*  : [ ${message.prefix} ]
+┃ ❖ *𝐃𝐚𝐭𝐞*    : ${date}
+┃ ❖ *𝐓𝐢𝐦𝐞*    : ${time}
+┃ ❖ *𝐔𝐩𝐭𝐢𝐦𝐞*  : ${clockString(uptime())} 
+┃ ❖ *𝐕𝐞𝐫𝐬𝐢𝐨𝐧* : ᴠ${version}
+┃
+╰━━━━━━━━━━━━━━━━━━━━━━╯
 ${await readMore()}`;
 
     let cmnd = [];
@@ -67,16 +69,15 @@ ${await readMore()}`;
     });
     cmnd.sort();
     category.sort().forEach((cmmd) => {
-        menu += `\n\n🌟✨⭐ *${cmmd.toUpperCase()}* ⭐✨🌟`;
+        menu += `\n\n╭──〔 ⬡ *${cmmd.toUpperCase()}* ⬡ 〕`;
         let comad = cmnd.filter(({ type }) => type == cmmd);
         comad.forEach(({ cmd }, num) => {
-            let star = stars[num % 3];
-            menu += `\n ${star} *${cmd.trim()}*`;
+            menu += `\n│ ◈ *${cmd.trim()}*`;
         });
-        menu += `\n🌟✨⭐━━━━━━━━━━━⭐✨🌟`;
+        menu += `\n╰───────────────❖`;
     });
 
-    menu += `\n\n*🌟✨⭐ ${botName} ⭐✨🌟*`;
+    menu += `\n\n✦ *ᴩᴏᴡᴇʀᴇᴅ ʙʏ ${footerText}* ✦`;
 
     let url = `${config.BOT_INFO.split(';')[2]}`;
 
@@ -95,8 +96,7 @@ System({
     dontAddCommandList: true
 }, async (message, match) => {
     if (match === "cmd") return;
-    const stars = ["🌟", "✨", "⭐"];
-    let menu = "\n🌟✨⭐ *COMMAND LIST* ⭐✨🌟\n\n";
+    let menu = "\n╭━━━〔 𓏵‧₊˚ ┊COMMAND LIST一緒 〕━━━╮\n\n";
     let cmnd = plugins.commands.filter(command => !command.dontAddCommandList && command.pattern);
     cmnd = cmnd.map(command => ({
         cmd: command.pattern.toString().match(/(\W*)([A-Za-züşiğ öç1234567890]*)/)[2],
@@ -104,9 +104,9 @@ System({
     }));
     cmnd.sort((a, b) => a.cmd.localeCompare(b.cmd));
     cmnd.forEach(({ cmd, desc }, num) => {
-        let star = stars[num % 3];
-        menu += `${star} *${(num + 1)}. ${cmd.trim()}*\n${desc ? `   └ *use: ${desc}*\n\n` : '\n'}`;
+        menu += `│ ◈ *${(num + 1)}. ${cmd.trim()}*\n${desc ? `│    └ *use: ${desc}*\n\n` : '\n'}`;
     });
+    menu += `╰━━━━━━━━━━━━━━━━━━━━━━╯\n\n✦ *ᴩᴏᴡᴇʀᴇᴅ ʙʏ ₗₘₘₒDZ-Bₒₜ-ₓD* ✦`;
     if (config.MEDIA_DATA) {
         const [title, body, thumbnail] = config.MEDIA_DATA.split(";");
         await message.sendFromUrl(thumbnail, { caption: menu });
