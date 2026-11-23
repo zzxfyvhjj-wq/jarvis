@@ -24,17 +24,19 @@ System({
     let [date, time] = new Date().toLocaleString("en-IN", { timeZone: config.TIMEZONE }).split(",");
     
     let filterType = match ? match.trim().toUpperCase() : null;
+    let botName = "ᴩᴏᴡᴇʀᴇᴅ ʙʏ ʟᴜɴᴀᴍᴀꜱꜱ";
+    const stars = ["🌟", "✨", "⭐"];
 
-    let menu = `🚩━━━ ☭ *${config.BOT_INFO.split(';')[0]}* ☭ ━━━🚩
-☭ ★ *𝐎𝐰𝐧𝐞𝐫*   : ${config.BOT_INFO.split(';')[0]}
-☭ ★ *𝐔𝐬𝐞𝐫*    : ${message.pushName.replace(/[\r\n]+/gm, "")}
-☭ ★ *𝐏𝐥𝐮𝐠𝐢𝐧𝐬* : ${plugins.commands.length}
-☭ ★ *𝐏𝐫𝐞𝐟𝐢𝐱*  : ${message.prefix}
-☭ ★ *𝐃𝐚𝐭𝐞*    : ${date}
-☭ ★ *𝐓𝐢𝐦𝐞*    : ${time}
-☭ ★ *𝐔𝐩𝐭𝐢𝐦𝐞*  : ${clockString(uptime())} 
-☭ ★ *𝐕𝐞𝐫𝐬𝐢𝐨𝐧* : ᴠ${version}
-🚩━━━━━━━━━━━━━━━━━━━━━🚩
+    let menu = `🌟✨⭐ *${botName}* ⭐✨🌟
+🌟 *𝐎𝐰𝐧𝐞𝐫*   : ${botName}
+✨ *𝐔𝐬𝐞𝐫*    : ${message.pushName.replace(/[\r\n]+/gm, "")}
+⭐ *𝐏𝐥𝐮𝐠𝐢𝐧𝐬* : ${plugins.commands.length}
+🌟 *𝐏𝐫𝐞𝐟𝐢𝐱*  : ${message.prefix}
+✨ *𝐃𝐚𝐭𝐞*    : ${date}
+⭐ *𝐓𝐢𝐦𝐞*    : ${time}
+🌟 *𝐔𝐩𝐭𝐢𝐦𝐞*  : ${clockString(uptime())} 
+✨ *𝐕𝐞𝐫𝐬𝐢𝐨𝐧* : ᴠ${version}
+🌟✨⭐━━━━━━━━━━━━━━━⭐✨🌟
 ${await readMore()}`;
 
     let cmnd = [];
@@ -65,15 +67,16 @@ ${await readMore()}`;
     });
     cmnd.sort();
     category.sort().forEach((cmmd) => {
-        menu += `\n\n🚩▬▬▬ ☭ *${cmmd.toUpperCase()}* ☭ ▬▬▬🚩`;
+        menu += `\n\n🌟✨⭐ *${cmmd.toUpperCase()}* ⭐✨🌟`;
         let comad = cmnd.filter(({ type }) => type == cmmd);
         comad.forEach(({ cmd }, num) => {
-            menu += `\n ☭ *${cmd.trim()}*`;
+            let star = stars[num % 3];
+            menu += `\n ${star} *${cmd.trim()}*`;
         });
-        menu += `\n🚩▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬🚩`;
+        menu += `\n🌟✨⭐━━━━━━━━━━━⭐✨🌟`;
     });
 
-    menu += `\n\n*☭ 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐛𝐲 ${config.BOT_INFO.split(';')[0]} ☭*`;
+    menu += `\n\n*🌟✨⭐ ${botName} ⭐✨🌟*`;
 
     let url = `${config.BOT_INFO.split(';')[2]}`;
 
@@ -92,7 +95,8 @@ System({
     dontAddCommandList: true
 }, async (message, match) => {
     if (match === "cmd") return;
-    let menu = "\n🚩 ☭ *COMMAND LIST* ☭ 🚩\n\n";
+    const stars = ["🌟", "✨", "⭐"];
+    let menu = "\n🌟✨⭐ *COMMAND LIST* ⭐✨🌟\n\n";
     let cmnd = plugins.commands.filter(command => !command.dontAddCommandList && command.pattern);
     cmnd = cmnd.map(command => ({
         cmd: command.pattern.toString().match(/(\W*)([A-Za-züşiğ öç1234567890]*)/)[2],
@@ -100,7 +104,8 @@ System({
     }));
     cmnd.sort((a, b) => a.cmd.localeCompare(b.cmd));
     cmnd.forEach(({ cmd, desc }, num) => {
-        menu += `☭ *${(num + 1)}. ${cmd.trim()}*\n${desc ? `★ *use: ${desc}*\n\n` : '\n'}`;
+        let star = stars[num % 3];
+        menu += `${star} *${(num + 1)}. ${cmd.trim()}*\n${desc ? `   └ *use: ${desc}*\n\n` : '\n'}`;
     });
     if (config.MEDIA_DATA) {
         const [title, body, thumbnail] = config.MEDIA_DATA.split(";");
