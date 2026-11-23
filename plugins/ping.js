@@ -9,48 +9,108 @@ Jarvis - Loki-Xer
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-const { System, isPrivate, bot } = require("../lib/");  
+const plugins = require("../lib/system");
+const { System, isPrivate, config } = require("../lib");
+const { hostname, uptime } = require("os");
+const { version } = require('../package.json');
+const fancy = require('./client/fancy');
+const { isUrl, readMore, clockString } = require('./client/');
 
 System({
-    pattern: "(ping|speed)",
+    pattern: 'menu|m',
     fromMe: isPrivate,
-    type: "misc",
-    desc: "To check ping",
-    adminAccess: true,
-}, async (message) => {
-    const start = new Date().getTime();
-    const ping = await message.send("*𝆺𝅥 running 𝆺𝅥*");
-    const end = new Date().getTime();
-    const speed = end - start;
+    dontAddCommandList: true
+}, async (message, match) => {
+    let [date, time] = new Date().toLocaleString("en-IN", { timeZone: config.TIMEZONE }).split(",");
     
-    let response = `╭━━━〔 𓏵‧₊˚ ┊𝐋𝐌𝐌𝐎𝐃𝐙-𝐁𝐎𝐓-𝐗𝐃一緒 〕━━━╮
+    let filterType = match ? match.trim().toUpperCase() : null;
+    let botName = "𓏵‧₊˚ ┊𝐑𝐅𝐊 𝐌𝐎𝐃𝐒一緒";
+    let footerText = "𝐑𝐅𝐊 𝐌𝐎𝐃𝐒";
+
+    let menu = `╭━━━〔 ${botName} 〕━━━╮
 ┃
-┃ ❖ *𝐒𝐩𝐞𝐞𝐝*  : *${speed} ᴍꜱ*
-┃ ❖ *𝐒𝐭𝐚𝐭𝐮𝐬* : *Active*
+┃ ❖ *𝐎𝐰𝐧𝐞𝐫*   : 𝐑𝐅𝐊 𝐌𝐎𝐃𝐒
+┃ ❖ *𝐔𝐬𝐞𝐫*    : ${message.pushName.replace(/[\r\n]+/gm, "")}
+┃ ❖ *𝐏𝐥𝐮𝐠𝐢𝐧𝐬* : ${plugins.commands.length}
+┃ ❖ *𝐏𝐫𝐞𝐟𝐢𝐱*  : [ ${message.prefix} ]
+┃ ❖ *𝐃𝐚𝐭𝐞*    : ${date}
+┃ ❖ *𝐓𝐢𝐦𝐞*    : ${time}
+┃ ❖ *𝐔𝐩𝐭𝐢𝐦𝐞*  : ${clockString(uptime())} 
+┃ ❖ *𝐕𝐞𝐫𝐬𝐢𝐨𝐧* : ᴠ${version}
 ┃
 ╰━━━━━━━━━━━━━━━━━━━━━━╯
-✦ *ᴩᴏᴡᴇʀᴇᴅ ʙʏ ₗₘₘₒDZ-Bₒₜ-ₓD* ✦`;
+${await readMore()}`;
 
-    return await ping.edit(response);
+    let cmnd = [];
+    let cmd;
+    let category = [];
+    plugins.commands.map((command, num) => {
+        if (command.pattern) {
+            cmd = command.pattern.toString().match(/(\W*)([A-Za-züşiğ öç1234567890]*)/)[2];
+        }
+
+        if (!command.dontAddCommandList && cmd !== undefined) {
+            let type;
+            if (!command.type) {
+                type = "misc";
+            } else {
+                type = command.type.toLowerCase();
+            }
+            
+            if (filterType && type !== filterType) return;
+
+            cmnd.push({
+                cmd,
+                type: type
+            });
+
+            if (!category.includes(type)) category.push(type);
+        }
+    });
+    cmnd.sort();
+    category.sort().forEach((cmmd) => {
+        menu += `\n\n╭──〔 ⬡ *${cmmd.toUpperCase()}* ⬡ 〕`;
+        let comad = cmnd.filter(({ type }) => type == cmmd);
+        comad.forEach(({ cmd }, num) => {
+            menu += `\n│ ◈ *${cmd.trim()}*`;
+        });
+        menu += `\n╰───────────────❖`;
+    });
+
+    menu += `\n\n✦ *ᴩᴏᴡᴇʀᴇᴅ ʙʏ ${footerText}* ✦`;
+
+    let url = `${config.BOT_INFO.split(';')[2]}`;
+
+    if (isUrl(url)) {
+        let options = config.BOT_INFO.includes('&gif') ? { gifPlayback: true, caption: menu } : { caption: menu };  
+        url = url.replace(/&gif/g, '');
+        return await message.sendFromUrl(url, options);
+    } else {
+        return await message.send(menu);
+    }
 });
 
 System({
-    pattern: "(vv|view)",
-    fromMe: true,
-    type: "whatsapp",
-    desc: "get view ones message"
-}, async (message) => {
-   if (!message.reply_message.viewones) return await message.reply("_*Reply to a view once*_");
-   return await message.client.forwardMessage(message.chat, message.reply_message.data, { readViewOnce: true });
-});
-
-System({
-   pattern: "reboot",
-   fromMe: true,
-   desc: "to reboot your bot",
-   type: "server",
+    pattern: "list",
+    fromMe: isPrivate,
+    dontAddCommandList: true
 }, async (message, match) => {
-    await message.reply('_Rebooting..._');
-    bot.restart();
-    return message;
+    if (match === "cmd") return;
+    let menu = "\n╭━━━〔 𓏵‧₊˚ ┊COMMAND LIST一緒 〕━━━╮\n\n";
+    let cmnd = plugins.commands.filter(command => !command.dontAddCommandList && command.pattern);
+    cmnd = cmnd.map(command => ({
+        cmd: command.pattern.toString().match(/(\W*)([A-Za-züşiğ öç1234567890]*)/)[2],
+        desc: command.desc || false
+    }));
+    cmnd.sort((a, b) => a.cmd.localeCompare(b.cmd));
+    cmnd.forEach(({ cmd, desc }, num) => {
+        menu += `│ ◈ *${(num + 1)}. ${cmd.trim()}*\n${desc ? `│    └ *use: ${desc}*\n\n` : '\n'}`;
+    });
+    menu += `╰━━━━━━━━━━━━━━━━━━━━━━╯\n\n✦ *ᴩᴏᴡᴇʀᴇᴅ ʙʏ 𝐑𝐅𝐊 𝐌𝐎𝐃𝐒* ✦`;
+    if (config.MEDIA_DATA) {
+        const [title, body, thumbnail] = config.MEDIA_DATA.split(";");
+        await message.sendFromUrl(thumbnail, { caption: menu });
+    } else {
+        await message.send(menu);
+    }
 });
