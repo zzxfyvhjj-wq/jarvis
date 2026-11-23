@@ -13,10 +13,13 @@ System({
 
     let cmdList = commands
         .filter((cmd) => cmd.pattern && !cmd.dontAddCommandList)
-        .map((cmd) => cmd.pattern.toString().replace(/[^a-zA-Z0-9]/g, ""))
+        .map((cmd) => {
+            let pat = cmd.pattern.source || cmd.pattern.toString();
+            return pat.replace(/^\^|\$$/g, "").split("|")[0].replace(/[^a-zA-Z0-9]/g, "");
+        })
         .filter((name) => name.length > 0);
 
-    cmdList.sort().forEach((cmd) => {
+    [...new Set(cmdList)].sort().forEach((cmd) => {
         menuText += `☭ .${cmd}\n`;
     });
 
