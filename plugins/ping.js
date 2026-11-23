@@ -21,17 +21,7 @@ System({
     const start = new Date().getTime();
     const ping = await message.send("*𝆺𝅥 running 𝆺𝅥*");
     const end = new Date().getTime();
-    const speed = end - start;
-    
-    let response = `╭━━━〔 𓏵‧₊˚ ┊𝐑𝐅𝐊 𝐌𝐎𝐃𝐒一緒 〕━━━╮
-┃
-┃ ❖ *𝐒𝐩𝐞𝐞𝐝*  : *${speed} ᴍꜱ*
-┃ ❖ *𝐒𝐭𝐚𝐭𝐮𝐬* : *Active*
-┃
-╰━━━━━━━━━━━━━━━━━━━━━━╯
-✦ *ᴩᴏᴡᴇʀᴇᴅ ʙʏ 𝐑𝐅𝐊 𝐌𝐎𝐃𝐒* ✦`;
-
-    return await ping.edit(response);
+    return await ping.edit("*☇ˡᵐᵐᵒᵈᶻ-ᵇᵒᵗ-ᵐᵈ☁ :* " + (end - start) + " *ᴍꜱ*");
 });
 
 System({
