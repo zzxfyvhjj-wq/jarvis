@@ -25,9 +25,7 @@ System({
     
     let filterType = match ? match.trim().toUpperCase() : null;
 
-    
-    
-    let menu = `╭━━━〔 ${config.BOT_INFO.split(';')[0]} ⁩〕━━━┈⊷
+    let menu = `╭━━━〔 ${config.BOT_INFO.split(';')[0]} 〕━━━┈⊷
 ┃⛯╭──────────────
 ┃⛯│ *owner* :  ${config.BOT_INFO.split(';')[0]}
 ┃⛯│ *user* : ${message.pushName.replace(/[\r\n]+/gm, "")}
@@ -82,16 +80,14 @@ ${await readMore()}
     });
 
     menu += ` ╰━━━━━━━━━━━┈⊷\n`;
-    menu += `\nMade with 🤍`;
+    menu += `\nMade with 🤍 by RFK CYBER CHEKUTHAAN`;
 
     let url = `${config.BOT_INFO.split(';')[2]}`;
-    
 
     if (isUrl(url)) {
-    let options = config.BOT_INFO.includes('&gif') ? { gifPlayback: true, caption: menu } : { caption: menu };  
-    url = url.replace(/&gif/g, '');
-        return await message.sendFromUrl(url,
-          options)
+        let options = config.BOT_INFO.includes('&gif') ? { gifPlayback: true, caption: menu } : { caption: menu };  
+        url = url.replace(/&gif/g, '');
+        return await message.sendFromUrl(url, options);
     } else {
         return await message.send(menu);
     }
@@ -103,7 +99,7 @@ System({
     dontAddCommandList: true
 }, async (message, match) => {
     if (match === "cmd") return;
-    let menu = "\nمصنوع من🤍\n\n";
+    let menu = "\nMade with 🤍 by RFK CYBER CHEKUTHAAN\n\n";
     let cmnd = plugins.commands.filter(command => !command.dontAddCommandList && command.pattern);
     cmnd = cmnd.map(command => ({
         cmd: command.pattern.toString().match(/(\W*)([A-Za-züşiğ öç1234567890]*)/)[2],
@@ -115,7 +111,7 @@ System({
     });
     if (config.MEDIA_DATA) {
         const [title, body, thumbnail] = config.MEDIA_DATA.split(";");
-        await message.sendFromUrl(thumbnail, { caption: menu })
+        await message.sendFromUrl(thumbnail, { caption: menu });
     } else {
         await message.send(menu);
     }
